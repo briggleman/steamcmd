@@ -1,4 +1,4 @@
-#//todo fill out what we are starting with
+# start with a micro image
 FROM accursoft/micro-debian:latest
 
 # environment variables
@@ -6,11 +6,12 @@ ENV STEAMCMD /steamcmd
 ENV PATH $STEAMCMD:$PATH
 ENV CONFIG /config
 ENV PATH $CONFIG:$PATH
-ENV SCRIPT kf2.config
+ENV SCRIPT jc2.config
+ENV INIT start-jc2.sh
 
 # ports
-# 7777 => game port, 27015 => query port, 8080 => web admin, 20560 => steam
-EXPOSE 7777 27015 8080 20560
+# 7777 => game port, 27015 => query port, 20560 => steam
+EXPOSE 7777 27015 20560
 
 # set our working directory to steamcmd
 WORKDIR /steamcmd
@@ -18,8 +19,9 @@ WORKDIR /steamcmd
 # make a directory for our server scripts
 RUN mkdir /config
 
-# copy our killing floor 2 server file to /config
-COPY kf2.config $CONFIG
+# copy our server and config file to /config
+COPY jc2.config $CONFIG
+COPY start-jc2.sh $CONFIG
 
 # install dependencies
 RUN apt-get update && \
@@ -29,8 +31,11 @@ RUN apt-get update && \
 # download steamcmd and un-tar it
 RUN curl -sqL 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz' | tar zxvf -
 
+# copy our docker-entrypoint.sh script to /steamcmd
+COPY docker-entrypoint.sh $STEAMCMD
+
 # create a mount point for our config dir
 VOLUME ${CONFIG}
 
 # start steamcmd
-CMD ["bash", "-c", "./steamcmd.sh +runscript $CONFIG/$SCRIPT"]
+CMD ["bash", "-c", "./docker-entrypoint.sh"]
