@@ -1,7 +1,5 @@
-MAINTAINER ben.riggleman@gmail.com
-
-# start with latest alpine edge
-FROM apline:edge
+#//todo fill out what we are starting with
+FROM accursoft/micro-debian:latest
 
 # environment variables
 ENV STEAMCMD /steamcmd
@@ -17,17 +15,22 @@ EXPOSE 7777 27015 8080 20560
 # set our working directory to steamcmd
 WORKDIR /steamcmd
 
+# make a directory for our server scripts
+RUN mkdir /config
+
 # copy our killing floor 2 server file to /config
 COPY kf2.config $CONFIG
 
 # install dependencies
-RUN apk --add --update libstdc++ bash
+RUN apt-get update && \
+    apt-get install -y lib32gcc1 curl bash && \
+    apt-get clean
 
 # download steamcmd and un-tar it
 RUN curl -sqL 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz' | tar zxvf -
 
-# create a mount point for our scripts dir
-VOLUME ${SCRIPTS}
+# create a mount point for our config dir
+VOLUME ${CONFIG}
 
 # start steamcmd
-CMD ['steamcmd', ${SCRIPT}]
+CMD ["bash", "-c", "./steamcmd.sh +runscript $CONFIG/$SCRIPT"]
