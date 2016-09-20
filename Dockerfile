@@ -9,7 +9,7 @@ ENV PATH $CONFIG:$PATH
 ENV SCRIPT jc2.config
 ENV INIT start-jc2.sh
 ENV USERNAME anonymous
-ENV PASSWORD
+ENV PASSWORD ""
 
 # ports
 # 7777 => game port, 27015 => query port, 20560 => steam

@@ -1,9 +1,8 @@
 #!/bin/bash
-if [${USERNAME} != "anonymous"]
+if [ "$USERNAME" != "anonymous" ]
   then
     echo "swapping in username/password..."
-    sed -e 's/<USERNAME>/'"$USERNAME"'/' \
-        -e 's/<PASSWORD>/'"$PASSWORD"'/' <${CONFIG}/{${SCRIPT}} >${CONFIG}/${SCRIPT}
+    sed -i.bak 's/<USERNAME> <PASSWORD>/'"$USERNAME $PASSWORD"'/g' ${CONFIG}/${SCRIPT}
 fi
 echo "starting steamcmd..."
 ./steamcmd.sh +runscript ${CONFIG}/${SCRIPT} && \

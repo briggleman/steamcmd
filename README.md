@@ -3,7 +3,9 @@ steamcmd in Docker
 
 This repository provides everything you need to run steamcmd in Docker.
 
-For convenience it also contains a Just Cause 2:Multiplayer server file.
+For convenience it contains the following server files:
+* Just Cause 2:Multiplayer (no login required)
+* Starbound (login required)
 
 Why?
 ---
@@ -23,14 +25,21 @@ Run
 To run the container with the default JC2:MP server file:
 
 ```bash
-docker run -p 7777:7777 -p 27015:27015 -p 20560:20560 ghetto/steamcmd:latest
+docker run -td -p 7777:7777 -p 27015:27015 -p 20560:20560 ghetto/steamcmd:latest
 ```
 
-The ghetto/steamcmd container can also be run with custom config and sh files.  This allows
+The `ghetto/steamcmd` container can also be run with custom config and sh files.  This allows
 you to start container and have the update and server start process be completely automated.
 
 ```bash
-docker run -p 7777:7777 -p 27015:27015 -p 20560:20560 -v /myscripts:/config -e SCRIPT=jc2.config -e INIT=start-jc2.sh ghetto/steamcmd:latest
+docker run -td -p 7777:7777 -p 27015:27015 -p 20560:20560 -v /myscripts:/config -e SCRIPT=jc2.config -e INIT=start-jc2.sh ghetto/steamcmd:latest
+```
+
+The `ghetto/steamcmd` container can also be run with login credentials to download
+games that require a login.
+
+```bash
+docker run -td -p 7777:7777 -p 27015:27015 -p 20560:20560 -v /myscripts:/config -e USERNAME=gaben -e PASSWORD=valve -e SCRIPT=starbound.config -e INIT=start-starbound.sh ghetto/steamcmd:latest
 ```
 
 Volumes
@@ -50,13 +59,17 @@ Environment Variables
 
 * SCRIPT => jc2.config (default server file to use when launching steamcmd)
 * INIT => start-jc2.sh (default bash script to start the JC2:MP server)
+* USERNAME => anonymous (default username to use with login steamcmd command)
+* PASSWORD => "" (default password to use with the login steamcmd command)
 
 In the box
 ---
 * **ghetto/steamcmd**
 
-  The docker image with steamcmd. Built from the `accursoft/micro-debian`
+* The docker image with steamcmd. Built from the `accursoft/micro-debian`
   Debian micro image.
+* Just Cause 2: Multiplayer server file example (no login)
+* Starbound server file example (requires login)
 
 Public Builds
 ---
@@ -73,6 +86,7 @@ Notes
 ---
 
 * Additional ports can be mapped as required by using the `-p` flag.
+* See starbound.config/start-starbound.sh for how the system replaces credentials.
 
 Todo
 ---
