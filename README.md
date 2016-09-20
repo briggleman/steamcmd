@@ -77,4 +77,5 @@ Notes
 Todo
 ---
 
-* Add more documentation
+* Add an option to download config files from a GIT repo.
+* Add config files and environment variables for games that require login info.
