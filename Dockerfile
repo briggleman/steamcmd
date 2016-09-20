@@ -8,6 +8,8 @@ ENV CONFIG /config
 ENV PATH $CONFIG:$PATH
 ENV SCRIPT jc2.config
 ENV INIT start-jc2.sh
+ENV USERNAME anonymous
+ENV PASSWORD
 
 # ports
 # 7777 => game port, 27015 => query port, 20560 => steam
@@ -20,8 +22,7 @@ WORKDIR /steamcmd
 RUN mkdir /config
 
 # copy our server and config file to /config
-COPY jc2.config $CONFIG
-COPY start-jc2.sh $CONFIG
+COPY config/ $CONFIG
 
 # install dependencies
 RUN apt-get update && \
